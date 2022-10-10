@@ -6,14 +6,14 @@ else ifeq ($(shell uname -s),Linux)
   DLL_SUFFIX=so
   C_FILE_SUFFIX=-linux
 endif
-BUILD_DIRECTORY=addons/speechtotext/lib/$(OS_NAME)
+BUILD_DIRECTORY=../addons/speechtotext/lib/$(OS_NAME)
 
 CC=gcc
-INCLUDE_FLAGS:=-Iinclude/godot_headers -Iinclude/pocketsphinx
+INCLUDE_FLAGS:=-I../include/godot_headers -I../include/pocketsphinx
 ifeq ($(OS),Windows_NT)
-  INCLUDE_FLAGS+= -Iinclude/pthreads
+  INCLUDE_FLAGS+= -I../include/pthreads
 endif
-LDFLAGS=-Llib/$(OS_NAME)
+LDFLAGS=-L../lib/$(OS_NAME)
 ifeq ($(shell uname -s),Linux)
   CFLAGS=-fPIC
 endif
