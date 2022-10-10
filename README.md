@@ -49,7 +49,7 @@ Linux:
 Windows:
 
 - Install MinGW-w64 on your system
-- Run `make` in the src directory
+- Run `mingw32-make` in the src directory
 
 ## Known issues
 
