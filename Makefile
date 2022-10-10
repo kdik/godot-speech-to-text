@@ -6,6 +6,7 @@ else ifeq ($(shell uname -s),Linux)
   DLL_SUFFIX=so
   C_FILE_SUFFIX=-linux
 endif
+BUILD_DIRECTORY=addons/speechtotext/lib/$(OS_NAME)
 
 CC=gcc
 INCLUDE_FLAGS:=-Iinclude/godot_headers -Iinclude/pocketsphinx
@@ -27,8 +28,7 @@ ifeq ($(shell uname -s),Linux)
 endif
 
 stt:
-	mkdir -p bin/$(OS_NAME)
-	$(CC) $(CFLAGS) -c $@$(C_FILE_SUFFIX).c $(INCLUDE_FLAGS) -o bin/$(OS_NAME)/$@.o -Wno-incompatible-pointer-types-discards-qualifiers
-	$(CC) $(CFLAGS) -shared bin/$(OS_NAME)/$@.o $(LDFLAGS) $(LDLIBS) -o bin/$(OS_NAME)/lib$@.$(DLL_SUFFIX)
+	$(CC) $(CFLAGS) -c $@$(C_FILE_SUFFIX).c $(INCLUDE_FLAGS) -o $(BUILD_DIRECTORY)/$@.o -Wno-incompatible-pointer-types-discards-qualifiers
+	$(CC) $(CFLAGS) -shared $(BUILD_DIRECTORY)/$@.o $(LDFLAGS) $(LDLIBS) -o $(BUILD_DIRECTORY)/lib$@.$(DLL_SUFFIX)
 clean:
-	rm -r bin
+	rm -r $(BUILD_DIRECTORY)/stt.o $(BUILD_DIRECTORY)/libstt.$(DLL_SUFFIX)
