@@ -1,0 +1,18 @@
+[general]
+
+singleton=false
+load_once=true
+symbol_prefix="godot_"
+reloadable=true
+
+[entry]
+
+OSX.64="res://addons/speechtotext/lib/osx/libstt.dylib"
+Windows.64="res://addons/speechtotext/lib/win32/libstt.dll"
+X11.64="res://addons/speechtotext/lib/linux/libstt.so"
+
+[dependencies]
+
+OSX.64=[  ]
+Windows.64=["res://addons", "res://addons/speechtotext/lib/win32/pocketsphinx.dll", "res://addons/speechtotext/lib/win32/pthreadGC2.dll", "res://addons/speechtotext/lib/win32/sphinxbase.dll" ]
+X11.64=[  ]
