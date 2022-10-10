@@ -53,4 +53,6 @@ Windows:
 
 ## Known issues
 
+- Freezing if the game is quit while speech to text is being initialized or speech is recognized. This can be worked around by custom handling of quitting (e.g., `if speech_to_text.can_speak(): get_tree().quit()`)
 - MacOS is currently not supported
+- The directory **addons/speechtotext/model** and all its contents have to be copied to the exported game's root folder manually
