@@ -18,7 +18,7 @@ char *result;
 enum status_type {
     starting,
     ready,
-    enabled,
+    listening,
     in_recognition,
     recognition_finished,
     self_destructing
@@ -37,6 +37,7 @@ GDCALLINGCONV void stt_destructor(godot_object *p_instance, void *p_method_data,
 godot_variant stt_ready(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
 godot_variant stt_start(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
 godot_variant stt_stop(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
+godot_variant stt_listening(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
 godot_variant stt_recognition_finished(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
 godot_variant stt_get_result(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
 void *run_recognition_thread(void *arg_ptr);
@@ -89,6 +90,9 @@ void GDN_EXPORT godot_nativescript_init(void *p_handle)
   godot_instance_method stop = {NULL, NULL, NULL};
   stop.method = &stt_stop;
 
+  godot_instance_method listening = {NULL, NULL, NULL};
+  listening.method = &stt_listening;
+
   godot_instance_method recognition_finished = {NULL, NULL, NULL};
   recognition_finished.method = &stt_recognition_finished;
 
@@ -98,6 +102,7 @@ void GDN_EXPORT godot_nativescript_init(void *p_handle)
   nativescript_api->godot_nativescript_register_method(p_handle, "STT", "ready", attributes, ready);
   nativescript_api->godot_nativescript_register_method(p_handle, "STT", "start", attributes, start);
   nativescript_api->godot_nativescript_register_method(p_handle, "STT", "stop", attributes, stop);
+  nativescript_api->godot_nativescript_register_method(p_handle, "STT", "listening", attributes, listening);
   nativescript_api->godot_nativescript_register_method(p_handle, "STT", "recognition_finished", attributes, recognition_finished);
   nativescript_api->godot_nativescript_register_method(p_handle, "STT", "get_result", attributes, get_result);
 }
@@ -143,7 +148,7 @@ void *run_recognition_thread(void *arg_ptr)
   printf("Speech to text module ready\n");
   while (status != self_destructing)
   {
-    if (status == enabled)
+    if (status == listening)
     {
       printf("Recognition started\n");
       if ((ad = ad_open()) == NULL) printf("Failed to open audio device\n");
@@ -151,7 +156,7 @@ void *run_recognition_thread(void *arg_ptr)
       if (ps_start_utt(ps) < 0) printf("Failed to start utterance\n");
       
       // On Linux (PulseAudio) we read the buffer for a fixed amount of time (and then some) 
-      while (status == enabled)
+      while (status == listening)
       {
         if ((ad_n_samples = ad_read(ad, adbuf, buffer_size)) < 0) printf("Failed to read audio\n");
         ps_process_raw(ps, adbuf, ad_n_samples, FALSE, FALSE);
@@ -186,7 +191,7 @@ godot_variant stt_ready(godot_object *p_instance, void *p_method_data, void *p_u
 
 godot_variant stt_start(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args)
 {
-  status = enabled;
+  status = listening;
   return godot_null;
 }
 
@@ -194,6 +199,13 @@ godot_variant stt_stop(godot_object *p_instance, void *p_method_data, void *p_us
 {
   status = in_recognition;
   return godot_null;
+}
+
+godot_variant stt_listening(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args)
+{
+  godot_variant ret_bool;
+  api->godot_variant_new_bool(&ret_bool, status == listening);
+  return ret_bool;
 }
 
 godot_variant stt_recognition_finished(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args)
