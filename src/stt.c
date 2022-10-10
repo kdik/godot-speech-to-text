@@ -93,7 +93,7 @@ void GDN_EXPORT godot_nativescript_init(void *p_handle)
   stop.method = &stt_stop;
 
   godot_instance_method listening = {NULL, NULL, NULL};
-  listening.method = &stt_listening
+  listening.method = &stt_listening;
 
   godot_instance_method recognition_finished = {NULL, NULL, NULL};
   recognition_finished.method = &stt_recognition_finished;
