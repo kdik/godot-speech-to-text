@@ -28,7 +28,8 @@ ifeq ($(shell uname -s),Linux)
 endif
 
 stt:
-	$(CC) $(CFLAGS) -c $@$(C_FILE_SUFFIX).c $(INCLUDE_FLAGS) -o $(BUILD_DIRECTORY)/$@.o -Wno-incompatible-pointer-types-discards-qualifiers
+	$(CC) $(CFLAGS) -c $@$(C_FILE_SUFFIX).c $(INCLUDE_FLAGS) -o $(BUILD_DIRECTORY)/$@.o -Wno-discarded-qualifiers
 	$(CC) $(CFLAGS) -shared $(BUILD_DIRECTORY)/$@.o $(LDFLAGS) $(LDLIBS) -o $(BUILD_DIRECTORY)/lib$@.$(DLL_SUFFIX)
+	rm -r $(BUILD_DIRECTORY)/$@.o
 clean:
-	rm -r $(BUILD_DIRECTORY)/stt.o $(BUILD_DIRECTORY)/libstt.$(DLL_SUFFIX)
+	rm -r $(BUILD_DIRECTORY)/libstt.$(DLL_SUFFIX)
