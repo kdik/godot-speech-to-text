@@ -6,7 +6,7 @@ This plugin was originally developed for use in [Strange Aeons](https://store.st
 
 ## Instructions
 
-Once installed the node type **SpeechToText** should appear in the Godot engine. Add it to your scene and use the example below as a guideline.
+Once the plugin is installed and enabled the node type **SpeechToText** should appear in the Godot engine. Add it to your scene and use the example below as a guideline.
 
 ## Example
 
